@@ -26,6 +26,10 @@ Add into your project's `pom.xml`:
 
 ## A Simple Example
 
+Assume we have a HTTP request from the IP address: `128.101.101.101` with a user agent string: 
+`Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:50.0) Gecko/20100101 Firefox/50.0`.
+To perform a robot or spider check using [this algorithm][wiki-algorithm]:
+
 ```java
 // A File object pointing to your ip_exclude_current_cidr.txt file
 File ipFile = new File("/path/to/ip_exclude_current_cidr.txt");
