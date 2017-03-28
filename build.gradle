@@ -34,8 +34,6 @@ archivesBaseName = 'spiders-and-robots-client'
 version = '0.1.0'
 
 def javaVersion = JavaVersion.VERSION_1_7
-sourceCompatibility = javaVersion
-targetCompatibility = javaVersion
 
 repositories {
     // Use 'maven central' for resolving our dependencies
@@ -45,6 +43,8 @@ repositories {
 }
 
 configure([compileJava, compileTestJava]) {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
     options.encoding = 'UTF-8'
 }
 
@@ -65,7 +65,7 @@ dependencies {
     compile 'commons-io:commons-io:2.5'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:3.6.2'
+    testCompile 'org.assertj:assertj-core:2.6.0'
 }
 
 task sourceJar(type: Jar, dependsOn: 'generateSources') {
