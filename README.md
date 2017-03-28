@@ -54,12 +54,12 @@ For more complex examples and step by step description, please, refer the librar
 
 IAB Spiders And Robots Java Client is copyright 2017 Snowplow Analytics Ltd.
 
-Licensed under the **[Apache License, Version 2.0] [license]** (the "License"); you may not use this software except in compliance with the License.
+Licensed under the **[Apache License, Version 2.0][license]** (the "License"); you may not use this software except in compliance with the License.
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 [travis]: https://travis-ci.org/snowplow/iab-spiders-and-robots-java-client
-[releases]: https://img.shields.io/github/release/snowplow/iab-spiders-and-robots-java-client.svg?style=flat
+[releases]: https://github.com/snowplow/iab-spiders-and-robots-java-client/releases
 
 [wiki-usage]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/Usage-Of-The-Library
 [wiki-algorithm]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/The-Library-Algorithm
