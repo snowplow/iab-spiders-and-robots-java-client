@@ -38,13 +38,13 @@ InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
 IabResponse iabResponse = client.check(useragent, ipAddress);
 ```
 
-For more complex examples and step by step description, please, refer the library Wiki: [Usage Of The Library](usage-wiki)
+For more complex examples and step by step description, please, refer the library Wiki: [Usage Of The Library][wiki-usage]
 
 ## Find out more
 
-* [Usage Of The Library](usage-wiki)
+* [Usage Of The Library][wiki-usage]
 
-* [The Library Algorithm](algorithm-wiki)
+* [The Library Algorithm][wiki-algorithm]
 
 ## Copyright and License
 
@@ -54,7 +54,7 @@ Licensed under the **[Apache License, Version 2.0] [license]** (the "License"); 
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-[usage-wiki]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/Usage-Of-The-Library
-[algorithm-wiki]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/The-Library-Algorithm
+[wiki-usage]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/Usage-Of-The-Library
+[wiki-algorithm]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/The-Library-Algorithm
 [license]: http://www.apache.org/licenses/LICENSE-2.0
 
