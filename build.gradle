@@ -109,6 +109,13 @@ public class Version {
 compileJava.dependsOn generateSources
 compileJava.source generateSources.outputs.files, sourceSets.main.java
 
+
+task printVersion {
+    doLast {
+        print "$project.version"
+    }
+}
+
 // custom tasks for creating source/javadoc jars
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'

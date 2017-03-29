@@ -8,3 +8,10 @@ language: java
 jdk:
  - oraclejdk7
  - oraclejdk8
+
+ deploy:
+   skip_cleanup: true
+   provider: script
+   script: ./.travis/deploy.sh $TRAVIS_TAG
+   on:
+     tags: true
