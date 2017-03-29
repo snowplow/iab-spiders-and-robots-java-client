@@ -1,17 +1,17 @@
 sudo: false
 
 before_install:
- - chmod +x gradlew
+  - chmod +x gradlew
 
 language: java
 
 jdk:
- - oraclejdk7
- - oraclejdk8
+  - oraclejdk7
+  - oraclejdk8
 
- deploy:
-   skip_cleanup: true
-   provider: script
-   script: ./.travis/deploy.sh $TRAVIS_TAG
-   on:
-     tags: true
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ./.travis/deploy.sh $TRAVIS_TAG
+    on:
+      tags: true
