@@ -11,8 +11,6 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-wrapper.gradleVersion = '3.4.1'
-
 buildscript {
     repositories {
         maven { url 'http://repo.spring.io/plugins-release' }
@@ -22,6 +20,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
@@ -29,7 +31,8 @@ apply plugin: 'propdeps'
 apply plugin: 'propdeps-maven'
 apply plugin: 'propdeps-idea'
 
-group = 'com.snowplowanalytics.iab'
+wrapper.gradleVersion = '3.4.1'
+
 archivesBaseName = 'spiders-and-robots-client'
 version = '0.1.0'
 
@@ -72,25 +75,6 @@ task sourceJar(type: Jar, dependsOn: 'generateSources') {
     from sourceSets.main.allJava
 }
 
-// Publishing
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId 'spiders-and-robots-client'
-            from components.java
-
-            artifact sourceJar {
-                classifier "sources"
-            }
-        }
-    }
-    repositories {
-        maven {
-            url "$buildDir/repo" // change to point to your repo, e.g. http://my.org/repo
-        }
-    }
-}
-
 task generateSources {
     project.ext.set("outputDir", "$projectDir/src/main/java/com/snowplowanalytics/iab/spidersandrobotsclient")
     doFirst {
@@ -124,3 +108,87 @@ public class Version {
 
 compileJava.dependsOn generateSources
 compileJava.source generateSources.outputs.files, sourceSets.main.java
+
+// custom tasks for creating source/javadoc jars
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// add javadoc/source jar tasks as artifacts
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = 'spiders-and-robots-client'
+        pom.version = "$project.version"
+        pom.project {
+            name = 'spiders-and-robots-client'
+            description = 'Snowplow Java client library for the IAB and ABC International Spiders and Robots lists.'
+            url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/'
+            inceptionYear = '2017'
+
+            packaging = 'aar'
+            groupId = 'com.snowplowanalytics.iab'
+
+            licenses {
+                license {
+                    name = 'The Apache Software License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution = 'repo'
+                }
+            }
+            scm {
+                connection = 'https://github.com/snowplow/iab-spiders-and-robots-java-client.git'
+                url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
+            }
+            developers {
+                developer {
+                    name = 'Snowplow Analytics'
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_SNOWPLOW_MAVEN_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_SNOWPLOW_MAVEN_API_KEY')
+
+    configurations = ['archives']
+
+    publish = true
+
+    pkg {
+        repo = 'snowplow-maven'
+        name = 'spiders-and-robots-client'
+
+        group = 'com.snowplowanalytics'
+        userOrg = 'snowplow'
+
+        websiteUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
+        vcsUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
+        issueTrackerUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/issues'
+
+        licenses = ['Apache-2.0']
+
+        version.name = "$project.version"
+    }
+}
