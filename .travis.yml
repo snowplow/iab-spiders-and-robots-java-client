@@ -2,6 +2,7 @@ sudo: false
 
 before_install:
   - chmod +x gradlew
+  - chmod +x .travis/deploy.sh
 
 language: java
 
