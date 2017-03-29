@@ -1,4 +1,4 @@
-# iab-spiders-and-robots-java-client
+# IAB Spiders And Robots Java Client
 
 [![Build Status](https://api.travis-ci.org/snowplow/iab-spiders-and-robots-java-client.svg?branch=master)][travis]
 [![Release](https://img.shields.io/github/release/snowplow/iab-spiders-and-robots-java-client.svg?style=flat)][releases]
@@ -28,7 +28,7 @@ Add into your project's `pom.xml`:
 
 Assume we have a HTTP request from the IP address: `128.101.101.101` with a user agent string: 
 `Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:50.0) Gecko/20100101 Firefox/50.0`.
-To perform a robot or spider check using [this algorithm][wiki-algorithm]:
+To perform a robot or spider check using **[this algorithm][wiki-algorithm]**:
 
 ```java
 // A File object pointing to your ip_exclude_current_cidr.txt file
@@ -46,13 +46,26 @@ InetAddress ipAddress = InetAddress.getByName("128.101.101.101");
 IabResponse iabResponse = client.check(useragent, ipAddress);
 ```
 
-For more complex examples and step by step description, please, refer the library Wiki: [Usage Of The Library][wiki-usage]
+For more complex examples and step by step description, please, refer the library Wiki: **[Usage Of The Library][wiki-usage]**
+
+## Quickstart
+
+Assuming git, **[Vagrant][vagrant-install]** and **[VirtualBox][virtualbox-install]** installed:
+
+```bash
+host$ git clone https://github.com/snowplow/iab-spiders-and-robots-java-client.git
+host$ cd iab-spiders-and-robots-java-client
+host$ vagrant up && vagrant ssh
+guest$ cd /vagrant
+guest$ ./gradlew clean build
+guest$ ./gradlew test
+```
 
 ## Find out more
 
-* [Usage Of The Library][wiki-usage]
+* **[Usage Of The Library][wiki-usage]**
 
-* [The Library Algorithm][wiki-algorithm]
+* **[The Library Algorithm][wiki-algorithm]**
 
 ## Copyright and License
 
@@ -64,6 +77,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 [travis]: https://travis-ci.org/snowplow/iab-spiders-and-robots-java-client
 [releases]: https://github.com/snowplow/iab-spiders-and-robots-java-client/releases
+
+[vagrant-install]: http://docs.vagrantup.com/v2/installation/index.html
+[virtualbox-install]: https://www.virtualbox.org/wiki/Downloads
 
 [wiki-usage]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/Usage-Of-The-Library
 [wiki-algorithm]: https://github.com/snowplow/iab-spiders-and-robots-java-client/wiki/The-Library-Algorithm
