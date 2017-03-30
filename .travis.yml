@@ -16,3 +16,4 @@ deploy:
     script: ./.travis/deploy.sh $TRAVIS_TAG
     on:
       tags: true
+      condition: "$TRAVIS_JDK_VERSION = oraclejdk7"
