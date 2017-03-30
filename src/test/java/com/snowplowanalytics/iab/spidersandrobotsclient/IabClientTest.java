@@ -15,6 +15,7 @@ package com.snowplowanalytics.iab.spidersandrobotsclient;
 import com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason;
 import com.snowplowanalytics.iab.spidersandrobotsclient.lib.PrimaryImpact;
 import com.snowplowanalytics.iab.spidersandrobotsclient.lib.UserAgentCategory;
+import com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal.util.DateUtils;
 import com.snowplowanalytics.iab.spidersandrobotsclient.test.TestResources;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.BeforeClass;
@@ -165,6 +166,14 @@ public class IabClientTest {
         final InetAddress ipAddressNull = null;
         assertIncludeUaResponse(
                 client.check("xxx user agent at the start only", ipAddressNull)
+        );
+
+        assertIncludeUaResponse(
+                client.checkAt("Some Inactive Browser", ipAddressNull, DateUtils.date(2017, 3, 30))
+        );
+
+        assertBrowserResponse(
+                client.checkAt("Some Inactive Browser", ipAddressNull, DateUtils.date(2017, 3, 29))
         );
 
         assertExcludeUaResponse(

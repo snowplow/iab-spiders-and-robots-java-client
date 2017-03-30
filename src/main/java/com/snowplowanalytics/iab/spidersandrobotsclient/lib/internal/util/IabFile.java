@@ -36,7 +36,7 @@ public final class IabFile {
 
     private static final String TRUE_STRING = "1";
 
-    private static final String INACTIVE_DATE_FORMAT = "mm/dd/yyyy";
+    private static final String INACTIVE_DATE_FORMAT = "MM/dd/yyyy";
 
     private static final char COMMENT = '#';
 

@@ -12,6 +12,7 @@
  */
 package com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal;
 
+import com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal.util.DateUtils;
 import com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal.util.IabFile;
 import com.snowplowanalytics.iab.spidersandrobotsclient.test.TestResources;
 import org.junit.Test;
@@ -61,17 +62,17 @@ public class IncludeUserAgentsTest {
 
         final String date = "03/23/2017";
 
-        Date accurateAtBefore = IabFile.parseDate("03/22/2017");
+        Date accurateAtBefore = DateUtils.date(2017, 3, 22);
         assertThat(
                 active("browser", inactiveRecord, date).present("some browser", accurateAtBefore)
         ).isTrue();
 
-        Date accurateAtEqual = IabFile.parseDate("03/23/2017");
+        Date accurateAtEqual = DateUtils.date(2017, 3, 23);
         assertThat(
                 active("browser", inactiveRecord, date).present("some browser", accurateAtEqual)
         ).isFalse();
 
-        Date accurateAtAfter = IabFile.parseDate("03/24/2017");
+        Date accurateAtAfter = DateUtils.date(2017, 3, 24);
         assertThat(
                 active("browser", inactiveRecord, date).present("some browser", accurateAtAfter)
         ).isFalse();

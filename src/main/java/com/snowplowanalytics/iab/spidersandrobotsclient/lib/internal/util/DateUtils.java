@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -34,6 +35,11 @@ public final class DateUtils {
 
     public static Date now() {
         return new Date();
+    }
+
+    public static Date date(int year, int month, int dayOfMonth) {
+        // return new Date(year, month - 1, dayOfMonth);
+        return new GregorianCalendar(year, month - 1, dayOfMonth).getTime();
     }
 
     public static Date parseQuietly(final String date, final String pattern) {
