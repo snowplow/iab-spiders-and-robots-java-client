@@ -30,6 +30,8 @@ public class ExcludeRecord {
 
     private final String userAgentPattern;
 
+    private final boolean active;
+
     private final String exceptionPatterns;
 
     private final String primaryImpactFlag;
@@ -40,10 +42,7 @@ public class ExcludeRecord {
 
     public ExcludeRecord(CSVRecord record) {
         userAgentPattern = CsvUtils.getLowCaseString(record, 0);
-
-        // isn't used, because of we check inactiveDate
-        // active = CsvUtils.getBoolean(record, 1);
-
+        active = CsvUtils.getBoolean(record, 1, false);
         exceptionPatterns = CsvUtils.getLowCaseString(record, 2);
 
         // isn't used, because of previous check for valid UA should fail for such record
@@ -55,6 +54,10 @@ public class ExcludeRecord {
     }
 
     public boolean isPresent(String userAgentLowCase) {
+        if (!active && inactiveDateIsNotSet()) {
+            return false;
+        }
+
         return isUserAgentPatternPresent(userAgentLowCase) && !isExceptionPatternPresent(userAgentLowCase);
     }
 
@@ -91,6 +94,10 @@ public class ExcludeRecord {
         }
 
         return result;
+    }
+
+    private boolean inactiveDateIsNotSet() {
+        return getInactiveDateAsDate() == null;
     }
 
     public Date getInactiveDateAsDate() {

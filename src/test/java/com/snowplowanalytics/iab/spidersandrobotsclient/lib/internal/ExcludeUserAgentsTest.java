@@ -78,21 +78,58 @@ public class ExcludeUserAgentsTest {
     }
 
     @Test
-    public void inactiveDate() throws IOException {
-        assertThat(inactiveDate("agent", null).check("agent").inactiveDateIsNotSet()).isTrue();
-        assertThat(inactiveDate("agent", "").check("agent").inactiveDateIsNotSet()).isTrue();
-        assertThat(inactiveDate("agent", "incorrect date").check("agent").inactiveDateIsNotSet()).isTrue();
+    public void inactiveDateWithActiveRecord() throws IOException {
+        final boolean activeRecord = true;
+        assertInactiveDate(activeRecord);
+    }
 
+    @Test
+    public void inactiveDateWithInactiveRecord() throws IOException {
+        final boolean activeRecord = false;
+        assertInactiveDate(activeRecord);
+    }
+
+    private static void assertInactiveDate(boolean activeRecord) throws IOException {
         final String date = "03/23/2017";
 
         Date accurateAtBefore = DateUtils.date(2017, 3, 22);
-        assertThat(inactiveDate("agent", date).check("agent").isBeforeInactiveDate(accurateAtBefore)).isTrue();
+        assertThat(present(inactiveDate("agent", activeRecord, date).check("agent"))
+                .isBeforeInactiveDate(accurateAtBefore)).isTrue();
 
         Date accurateAtEqual = DateUtils.date(2017, 3, 23);
-        assertThat(inactiveDate("agent", date).check("agent").isBeforeInactiveDate(accurateAtEqual)).isFalse();
+        assertThat(present(inactiveDate("agent", activeRecord, date).check("agent"))
+                .isBeforeInactiveDate(accurateAtEqual)).isFalse();
 
         Date accurateAtAfter = DateUtils.date(2017, 3, 24);
-        assertThat(inactiveDate("agent", date).check("agent").isBeforeInactiveDate(accurateAtAfter)).isFalse();
+        assertThat(present(inactiveDate("agent", activeRecord, date).check("agent"))
+                .isBeforeInactiveDate(accurateAtAfter)).isFalse();
+    }
+
+    @Test
+    public void inactiveDateIsNotSetWithActiveRecord() throws IOException {
+        final boolean activeRecord = true;
+        assertThat(present(inactiveDate("agent", activeRecord, null)
+                .check("agent")).inactiveDateIsNotSet()).isTrue();
+        assertThat(present(inactiveDate("agent", activeRecord, "")
+                .check("agent")).inactiveDateIsNotSet()).isTrue();
+        assertThat(present(inactiveDate("agent", activeRecord, "incorrect date").check("agent"))
+                .inactiveDateIsNotSet()).isTrue();
+    }
+
+    @Test
+    public void inactiveDateIsNotSetWithInactiveRecord() throws IOException {
+        final String inactiveDate = null;
+
+        final boolean inactiveRecord = false;
+        assertThat(
+                inactiveDate("agent", inactiveRecord, inactiveDate).check("agent").isPresent()
+        ).isFalse();
+
+        final boolean activeRecord = true;
+
+        assertThat(
+                inactiveDate("agent", activeRecord, inactiveDate).check("agent").isPresent()
+        ).isTrue();
     }
 
     @Test
@@ -136,34 +173,43 @@ public class ExcludeUserAgentsTest {
                 .isEqualTo(PAGE_AND_AD_IMPRESSIONS);
     }
 
+    private static ExcludeCheckResult present(ExcludeCheckResult result) {
+        assertThat(result.isPresent()).isTrue();
+        return result;
+    }
+
     private static ExcludeUserAgents agent(String userAgentPattern,
                                            boolean startOfString) throws IOException {
+        final boolean activeRecord = true;
         final String primaryImpactFlag = "0";
-        return record(userAgentPattern, null, null, null, primaryImpactFlag,
-                IabFile.toBooleanStr(startOfString), null);
+        return record(userAgentPattern, IabFile.toBooleanStr(activeRecord),
+                null, null, primaryImpactFlag, IabFile.toBooleanStr(startOfString), null);
     }
 
     private static ExcludeUserAgents exception(String userAgentPattern,
                                                String patterns) throws IOException {
+        final boolean activeRecord = true;
         final String primaryImpactFlag = "0";
         final boolean startOfString = false;
-        return record(userAgentPattern, null, patterns, null, primaryImpactFlag,
-                IabFile.toBooleanStr(startOfString), null);
+        return record(userAgentPattern, IabFile.toBooleanStr(activeRecord),
+                patterns, null, primaryImpactFlag, IabFile.toBooleanStr(startOfString), null);
     }
 
     private static ExcludeUserAgents inactiveDate(String userAgentPattern,
+                                                  boolean activeRecord,
                                                   String inactiveDate) throws IOException {
         final String primaryImpactFlag = "0";
         final boolean startOfString = false;
-        return record(userAgentPattern, null, null, null, primaryImpactFlag,
-                IabFile.toBooleanStr(startOfString), inactiveDate);
+        return record(userAgentPattern, IabFile.toBooleanStr(activeRecord),
+                null, null, primaryImpactFlag, IabFile.toBooleanStr(startOfString), inactiveDate);
     }
 
     private static ExcludeUserAgents primaryImpact(String userAgentPattern,
                                                    String primaryImpactFlag) throws IOException {
+        final boolean activeRecord = true;
         final boolean startOfString = false;
-        return record(userAgentPattern, null, null, null, primaryImpactFlag,
-                IabFile.toBooleanStr(startOfString), null);
+        return record(userAgentPattern, IabFile.toBooleanStr(activeRecord),
+                null, null, primaryImpactFlag, IabFile.toBooleanStr(startOfString), null);
     }
 
     private static ExcludeUserAgents record(String... values) throws IOException {
