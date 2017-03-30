@@ -152,7 +152,8 @@ install {
             url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/'
             inceptionYear = '2017'
 
-            packaging = 'aar'
+            packaging = 'jar'
+
             groupId = 'com.snowplowanalytics.iab'
 
             licenses {
