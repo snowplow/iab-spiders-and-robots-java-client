@@ -33,7 +33,7 @@ apply plugin: 'propdeps-idea'
 
 wrapper.gradleVersion = '3.4.1'
 
-archivesBaseName = 'spiders-and-robots-client'
+archivesBaseName = 'iab-spiders-and-robots-client'
 version = '0.1.0-rc1'
 
 def javaVersion = JavaVersion.VERSION_1_7
@@ -144,10 +144,10 @@ publishing {
 
 install {
     repositories.mavenInstaller {
-        pom.artifactId = 'spiders-and-robots-client'
+        pom.artifactId = 'iab-spiders-and-robots-client'
         pom.version = "$project.version"
         pom.project {
-            name = 'spiders-and-robots-client'
+            name = 'iab-spiders-and-robots-client'
             description = 'Snowplow Java client library for the IAB and ABC International Spiders and Robots lists.'
             url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/'
             inceptionYear = '2017'
@@ -192,7 +192,7 @@ bintray {
 
     pkg {
         repo = 'snowplow-maven'
-        name = 'spiders-and-robots-client'
+        name = 'iab-spiders-and-robots-client'
 
         group = 'com.snowplowanalytics'
         userOrg = 'snowplow'
