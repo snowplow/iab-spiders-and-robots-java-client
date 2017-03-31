@@ -18,8 +18,8 @@ Add into your project's `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.snowplowanalytics.iab</groupId>
-    <artifactId>spiders-and-robots-client</artifactId>
+    <groupId>com.snowplowanalytics</groupId>
+    <artifactId>iab-spiders-and-robots-client</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
