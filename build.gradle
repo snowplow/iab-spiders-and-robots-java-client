@@ -153,8 +153,7 @@ install {
             inceptionYear = '2017'
 
             packaging = 'jar'
-
-            groupId = 'com.snowplowanalytics.iab'
+            groupId = 'com.snowplowanalytics'
 
             licenses {
                 license {
@@ -169,8 +168,15 @@ install {
             }
             developers {
                 developer {
-                    name = 'Snowplow Analytics'
+                    name = 'Snowplow Analytics Ltd'
+                    email = 'support@snowplowanalytics.com'
+                    organization = 'Snowplow Analytics Ltd'
+                    organizationUrl = 'http://snowplowanalytics.com'
                 }
+            }
+            organization {
+                name = 'com.snowplowanalytics'
+                url = 'http://snowplowanalytics.com'
             }
         }
     }
