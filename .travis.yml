@@ -1,19 +1,19 @@
 sudo: false
-
 before_install:
-  - chmod +x gradlew
-  - chmod +x .travis/deploy.sh
-
+- chmod +x gradlew
+- chmod +x .travis/deploy.sh
 language: java
-
 jdk:
-  - oraclejdk7
-  - oraclejdk8
-
+- oraclejdk7
+- oraclejdk8
 deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ./.travis/deploy.sh $TRAVIS_TAG
-    on:
-      tags: true
-      condition: "$TRAVIS_JDK_VERSION = oraclejdk7"
+- provider: script
+  skip_cleanup: true
+  script: "./.travis/deploy.sh $TRAVIS_TAG"
+  on:
+    tags: true
+    condition: "$TRAVIS_JDK_VERSION = oraclejdk7"
+env:
+  global:
+  - secure: zwxFfQYrVo6JMbHwdrcP/QskbRmPISWZI9E5xLML9RR+uBzej4A+jdIDuP1Xre60uV+jpvNDDUjX7Qxd3sV9qWWeUFBOh75xh02eoheZDyevZjRMQu1clqILX2VdIXhWTG/ZHLEjW7ohso2vRhgelFm2R4HQ9o/muwxZZXGW5BJ64RjCPPgTTzIOCHzfMyow+8y+qvJ/BKXKxFaVO/gTHcW19ZtRumfOX8dGhvm6a8afSxKPmUaZFCzOfzOKMojlsCw2Klx+BiUYG8/MGtnoAOZXkjzW3i9/qI8OACg8V5GSVTgjrV1mqdLF+pXCf30oj+24C6NNMwI4lN4shEBSe6aDGSGBz7xUcgNUdiyZ+P2RuG8I862y+lwc5vD1oO1tKth0Q+ivXR7ZxorKys/sPLqsA+eFnB5QIGgfh1eQV45Njh4AsRPFzkwhjqKNuBeGdwWiJROPpuZo7OvmV2em/1aJR0CeAmALgV3qYHcfu5sFROvOIhwh7VvufKu5g02EcAtYDilL6CaEFyM9yaHSxcTbFG5BGwm7juZlRJaxAPwUr3jP/282t1xIcKLhWcjKF7vwYyOYhMKXE5EK3+Wl6UDEXg1t1GK4zCTvE7LGZ/fe64BE5NwClTPwI/Zqyw80Ku8oHU4VIyCiCYxrWlyCHrJIzNAd8nufmOctWbZqyEg=
+  - secure: LD6zn/ZOO5SN7LfhdBly0jYQsDtYQHay7mY4IIIkGIh9zgWw6Q+/pBU5HZu4LnpgfE1bJCEXVpWRGSPJY2nP0qLk61LliX3QnsI7PqDvzymD2p223AY7wPBoHPfd27BrXsOb+GleEAcNZqXHrqg2UVpie2tDT7b5EahaHGQlM+iiqatpBylFhwHLedUKaVnUQLVco2vLPm8vGriCO+hAjC8jeIB6q+nCB+pUxQlGN5TvfB2Q34D5cD4WrjdbgGF6mB8dTWqyZlaK1zEy0dlTJZc+lmJ+092wSJFbt2FxPtc4dglfkRlsInSQLI1TxALGZGayxkIQ3drLEksveVjq9E+Wp3o02ZD8yBKXMGp/cRDmL5XoXK6Gx0M34pU4ewG5pJcL/UEOxqYe51Xt3BPwvReBn8LsCSsgjTitCtypeTT+rdo5k6VzcrNudcNbm89uLy4MTb6vjDelxl5mE3iyA2dzX0H4EGLE5AE/Scg3wtNmvw1dkiHTULCQdG/00OyME407MfLpMcDLao6t4el6lwHbEOj6bAXuFGYM8hgDquIeOvnrvM39+5U0yW2y9x3P0t+kPgSC2e/GM6zVY2fADRx1JueZqNoQGisawp5OcKQ1LmsENlggBIbjYIn8LbANQTS/xtNj2Sz8nGpy0HkTk4dkfZhMgMw5LnjFKtUoRrY=
