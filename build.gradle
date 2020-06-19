@@ -36,7 +36,7 @@ wrapper.gradleVersion = '3.4.1'
 archivesBaseName = 'iab-spiders-and-robots-client'
 version = '0.1.0'
 
-def javaVersion = JavaVersion.VERSION_1_7
+def javaVersion = JavaVersion.VERSION_1_8
 
 repositories {
     // Use 'maven central' for resolving our dependencies
