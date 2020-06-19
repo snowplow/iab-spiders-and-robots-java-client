@@ -13,17 +13,15 @@
 package com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal;
 
 import com.snowplowanalytics.iab.spidersandrobotsclient.lib.internal.util.IabFile;
+import inet.ipaddr.IPAddressString;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.net.util.SubnetUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.apache.commons.io.IOUtils.buffer;
@@ -31,7 +29,7 @@ import static org.apache.commons.io.IOUtils.buffer;
 
 public class IpRanges {
 
-    private final List<SubnetUtils.SubnetInfo> cidrAddresses = new ArrayList<>();
+    private final Set<String> cidrAddresses = new HashSet<>();
 
     private final Set<String> plainAddresses = new HashSet<>();
 
@@ -49,7 +47,7 @@ public class IpRanges {
             String record = StringUtils.trimToNull(it.nextLine());
             if (record != null) {
                 if (isCidrNotation(record)) {
-                    cidrAddresses.add(subnetInfo(record));
+                    cidrAddresses.add(record);
                 } else {
                     plainAddresses.add(record);
                 }
@@ -61,27 +59,21 @@ public class IpRanges {
         return address.contains("/");
     }
 
-    private static SubnetUtils.SubnetInfo subnetInfo(String address) {
-        SubnetUtils result = new SubnetUtils(address);
-        result.setInclusiveHostCount(true);
-        return result.getInfo();
-    }
-
     public boolean belong(InetAddress ipAddress) {
-        String checkedIp = ipAddress.getHostAddress();
+        String hostAddress = ipAddress.getHostAddress();
+        IPAddressString ipAddressString = new IPAddressString(hostAddress);
 
-        if (plainAddresses.contains(checkedIp)) {
+        if (plainAddresses.contains(hostAddress)) {
             return true;
         }
 
-        for (SubnetUtils.SubnetInfo subnetInfo : cidrAddresses) {
-            if (subnetInfo.isInRange(checkedIp)) {
-                    return true;
-                }
+        IPAddressString subnet;
+        for (String address : cidrAddresses) {
+            subnet = new IPAddressString(address);
+            if (subnet.getAddress().toPrefixBlock().contains(ipAddressString.getAddress())) {
+                return true;
+            }
         }
-
         return false;
     }
-
 }
-

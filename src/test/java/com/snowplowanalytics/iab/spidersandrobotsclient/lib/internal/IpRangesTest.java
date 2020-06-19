@@ -76,10 +76,15 @@ public class IpRangesTest {
         assertThat(belong("89.205.228.130/31", "89.205.228.131")).isTrue();
         assertThat(belong("89.205.228.130/31", "89.205.228.132")).isFalse();
 
+        assertThat(belong("::9", "147.1.9.93")).isFalse();
+        assertThat(belong("217.152.89.67/15", "1000:abcd:0:6119::dead:beef")).isFalse();
+
+        assertThat(belong("1000:abcd:0:6119::dead:beef/64", "1000:abcd:0:6119::0:0")).isTrue();
+        assertThat(belong("1000:abcd:0:6119::0:0/128", "1000:abcd:0:6119::0:0")).isTrue();
+        assertThat(belong("1000:abcd:0:6119::0:0/0", "aaaa:bbbb:0:6119::0:0")).isTrue();
     }
 
     private static boolean belong(String ipRecord, String ipAddress) throws IOException {
        return new IpRanges(TestResources.asInputStream(ipRecord)).belong(InetAddress.getByName(ipAddress));
     }
-
 }
