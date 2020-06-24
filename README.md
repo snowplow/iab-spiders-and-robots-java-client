@@ -1,10 +1,10 @@
 # IAB Spiders And Robots Java Client
 
 [![Build Status](https://api.travis-ci.org/snowplow/iab-spiders-and-robots-java-client.svg?branch=master)][travis]
-[![Release](https://img.shields.io/github/release/snowplow/iab-spiders-and-robots-java-client.svg?style=flat)][releases]
+[![Release](http://img.shields.io/badge/release-0.2.0-blue.svg?style=flat)][releases]
 [![License](http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat)][license]
 
-This is a Java 7+ client library for the **[IAB/ABC International Spiders and Bots List][list]** (available separately).
+This is a Java 8 client library for the **[IAB/ABC International Spiders and Bots List][list]** (available separately).
 
 The library is available from Maven Central, and is published under the Apache 2.0 License.
 
@@ -18,7 +18,7 @@ Add into your project's `pom.xml`:
 <dependency>
     <groupId>com.snowplowanalytics</groupId>
     <artifactId>iab-spiders-and-robots-client</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
