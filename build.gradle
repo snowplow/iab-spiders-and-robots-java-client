@@ -34,7 +34,7 @@ apply plugin: 'propdeps-idea'
 wrapper.gradleVersion = '3.4.1'
 
 archivesBaseName = 'iab-spiders-and-robots-client'
-version = '0.1.0'
+version = '0.2.0'
 
 def javaVersion = JavaVersion.VERSION_1_8
 
@@ -83,7 +83,7 @@ task generateSources {
         srcFile.parentFile.mkdirs()
         srcFile.write(
                 """/*
- * Copyright (c) 2017 Snowplow Analytics Ltd. All rights reserved.
+ * Copyright (c) 2017-2020 Snowplow Analytics Ltd. All rights reserved.
  *
  * This program is licensed to you under the Apache License Version 2.0,
  * and you may not use this file except in compliance with the Apache License Version 2.0.
