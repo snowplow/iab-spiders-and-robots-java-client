@@ -5,12 +5,18 @@ before_install:
 language: java
 jdk:
 - oraclejdk8
+before_script:
+  - npm install -g snyk@1.360.0
+  - snyk -v
+  - snyk auth $SNYK_TOKEN
 deploy:
 - provider: script
   skip_cleanup: true
   script: "./.travis/deploy.sh $TRAVIS_TAG"
   on:
     tags: true
+after_deploy:
+  - snyk monitor --project-name=iab-spiders-and-robots-java-client
 env:
   global:
   - secure: zwxFfQYrVo6JMbHwdrcP/QskbRmPISWZI9E5xLML9RR+uBzej4A+jdIDuP1Xre60uV+jpvNDDUjX7Qxd3sV9qWWeUFBOh75xh02eoheZDyevZjRMQu1clqILX2VdIXhWTG/ZHLEjW7ohso2vRhgelFm2R4HQ9o/muwxZZXGW5BJ64RjCPPgTTzIOCHzfMyow+8y+qvJ/BKXKxFaVO/gTHcW19ZtRumfOX8dGhvm6a8afSxKPmUaZFCzOfzOKMojlsCw2Klx+BiUYG8/MGtnoAOZXkjzW3i9/qI8OACg8V5GSVTgjrV1mqdLF+pXCf30oj+24C6NNMwI4lN4shEBSe6aDGSGBz7xUcgNUdiyZ+P2RuG8I862y+lwc5vD1oO1tKth0Q+ivXR7ZxorKys/sPLqsA+eFnB5QIGgfh1eQV45Njh4AsRPFzkwhjqKNuBeGdwWiJROPpuZo7OvmV2em/1aJR0CeAmALgV3qYHcfu5sFROvOIhwh7VvufKu5g02EcAtYDilL6CaEFyM9yaHSxcTbFG5BGwm7juZlRJaxAPwUr3jP/282t1xIcKLhWcjKF7vwYyOYhMKXE5EK3+Wl6UDEXg1t1GK4zCTvE7LGZ/fe64BE5NwClTPwI/Zqyw80Ku8oHU4VIyCiCYxrWlyCHrJIzNAd8nufmOctWbZqyEg=
