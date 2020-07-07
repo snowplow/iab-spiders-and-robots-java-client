@@ -34,7 +34,7 @@ apply plugin: 'propdeps-idea'
 wrapper.gradleVersion = '3.4.1'
 
 archivesBaseName = 'iab-spiders-and-robots-client'
-version = '0.2.0-M1'
+version = '0.2.0-M2'
 
 def javaVersion = JavaVersion.VERSION_1_8
 
