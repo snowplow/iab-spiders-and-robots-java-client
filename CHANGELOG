@@ -1,3 +1,7 @@
+Version 0.2.1 (2023-04-14)
+--------------------------
+Fix class java.net.Inet4Address cannot be cast to class java.net.Inet6Address exception (#19)
+
 Version 0.2.0 (2020-07-09)
 --------------------------
 Integrate Synk (#15)
