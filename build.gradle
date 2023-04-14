@@ -65,7 +65,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.apache.commons:commons-csv:1.4'
     compile 'commons-io:commons-io:2.5'
-    compile 'com.github.seancfoley:ipaddress:5.3.1'
+    compile 'com.github.seancfoley:ipaddress:5.4.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.assertj:assertj-core:2.6.0'
