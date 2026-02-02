@@ -21,7 +21,9 @@ import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason.F
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason.FAILED_UA_INCLUDE;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason.PASSED_ALL;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.PrimaryImpact.NONE;
+import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.PrimaryImpact.PAGE_AND_AD_IMPRESSIONS;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.PrimaryImpact.UNKNOWN;
+import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.UserAgentCategory.ACTIVE_SPIDER_OR_ROBOT;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.UserAgentCategory.BROWSER;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.UserAgentCategory.SPIDER_OR_ROBOT;
 
@@ -74,6 +76,10 @@ public class IabResponse {
 
     public static IabResponse excludeCheckFailed(UserAgentCategory category, PrimaryImpact primaryImpact) {
         return createForSpiderOrRobot(category, FAILED_UA_EXCLUDE, primaryImpact);
+    }
+
+    static IabResponse customExcludeCheckFailed() {
+        return createForSpiderOrRobot(ACTIVE_SPIDER_OR_ROBOT, FAILED_UA_EXCLUDE, PAGE_AND_AD_IMPRESSIONS);
     }
 
     private static IabResponse createForSpiderOrRobot(UserAgentCategory category, CheckReason reason,

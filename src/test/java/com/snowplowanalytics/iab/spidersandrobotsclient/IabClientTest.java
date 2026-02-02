@@ -24,7 +24,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason.FAILED_IP_EXCLUDE;
 import static com.snowplowanalytics.iab.spidersandrobotsclient.lib.CheckReason.FAILED_UA_EXCLUDE;
@@ -147,6 +150,101 @@ public class IabClientTest {
     }
 
     @Test
+    public void customIncludeUseragentsTakesPrecedence() throws IOException {
+        List<String> includeUseragents = Arrays.asList("TrustedBot", "InternalMonitor");
+        List<String> excludeUseragents = Collections.emptyList();
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+
+        assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
+        assertBrowserResponse(client.check("My InternalMonitor Agent", localHost));
+    }
+
+    @Test
+    public void customExcludeUseragentsClassifiesAsBot() throws IOException {
+        List<String> includeUseragents = Collections.emptyList();
+        List<String> excludeUseragents = Arrays.asList("BadBot", "Scraper");
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+
+        assertCustomExcludeResponse(client.check("BadBot/1.0", localHost));
+        assertCustomExcludeResponse(client.check("My Scraper Agent", localHost));
+    }
+
+    @Test
+    public void customIncludeOverridesCustomExclude() throws IOException {
+        List<String> includeUseragents = Arrays.asList("TrustedBot");
+        List<String> excludeUseragents = Arrays.asList("Bot");
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+
+        assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
+        assertCustomExcludeResponse(client.check("OtherBot/1.0", localHost));
+    }
+
+    @Test
+    public void customListsAreCaseInsensitive() throws IOException {
+        List<String> includeUseragents = Arrays.asList("trustedbot");
+        List<String> excludeUseragents = Arrays.asList("badbot");
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+
+        assertBrowserResponse(client.check("TRUSTEDBOT/1.0", localHost));
+        assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
+        assertCustomExcludeResponse(client.check("BADBOT/1.0", localHost));
+        assertCustomExcludeResponse(client.check("BadBot/1.0", localHost));
+    }
+
+    @Test
+    public void customListsUseSubstringMatching() throws IOException {
+        List<String> includeUseragents = Arrays.asList("trusted");
+        List<String> excludeUseragents = Arrays.asList("bad");
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+
+        assertBrowserResponse(client.check("MyTrustedAgent/1.0", localHost));
+        assertCustomExcludeResponse(client.check("MyBadAgent/1.0", localHost));
+    }
+
+    @Test
+    public void customListsTakePrecedenceOverIabFiles() throws IOException {
+        List<String> includeUseragents = Arrays.asList("robot");
+        List<String> excludeUseragents = Collections.emptyList();
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "Browser|1|0", excludeUseragents, includeUseragents);
+
+        assertBrowserResponse(client.check("robot", localHost));
+    }
+
+    @Test
+    public void emptyCustomListsBehaveAsOriginal() throws IOException {
+        List<String> emptyList = Collections.emptyList();
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "Browser|1|0", emptyList, emptyList);
+
+        assertBrowserResponse(client.check("browser", localHost));
+        assertIncludeUaResponse(client.check("robot", localHost));
+    }
+
+    @Test
+    public void customExcludeTakesPrecedenceOverIabIncludeFile() throws IOException {
+        List<String> includeUseragents = Collections.emptyList();
+        List<String> excludeUseragents = Arrays.asList("browser");
+
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "browser|1|0", excludeUseragents, includeUseragents);
+
+        assertCustomExcludeResponse(client.check("browser", localHost));
+    }
+
+    @Test
+    public void nullCustomListsBehaveAsEmpty() throws IOException {
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "Browser|1|0", null, null);
+
+        assertBrowserResponse(client.check("browser", localHost));
+        assertIncludeUaResponse(client.check("robot", localHost));
+    }
+
+    @Test
     public void checkFromFiles() throws IOException {
         IabClient client = new IabClient(
                 TestResources.ipExcludeCurrentFile(),
@@ -226,6 +324,16 @@ public class IabClientTest {
         );
     }
 
+    private static void assertCustomExcludeResponse(IabResponse response) {
+        assertResponse(
+                response,
+                true,
+                ACTIVE_SPIDER_OR_ROBOT,
+                FAILED_UA_EXCLUDE,
+                PAGE_AND_AD_IMPRESSIONS
+        );
+    }
+
     private static void assertResponse(IabResponse response,
                                        boolean spiderOrRobot,
                                        UserAgentCategory category,
@@ -248,6 +356,19 @@ public class IabClientTest {
                 asInputStream(ipFilePrefix(ipFile)),
                 asInputStream(dummyRecordPrefix(excludeUserAgentFile)),
                 asInputStream(dummyRecordPrefix(includeUserAgentFile)));
+    }
+
+    private static IabClient clientWithCustomLists(String ipFile,
+                                                   String excludeUserAgentFile,
+                                                   String includeUserAgentFile,
+                                                   List<String> excludeUseragents,
+                                                   List<String> includeUseragents) throws IOException {
+        return new IabClient(
+                asInputStream(ipFilePrefix(ipFile)),
+                asInputStream(dummyRecordPrefix(excludeUserAgentFile)),
+                asInputStream(dummyRecordPrefix(includeUserAgentFile)),
+                excludeUseragents,
+                includeUseragents);
     }
 
 }
