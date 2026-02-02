@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020 Snowplow Analytics Ltd. All rights reserved.
+ * Copyright (c) 2017-2026 Snowplow Analytics Ltd. All rights reserved.
  *
  * This program is licensed to you under the Apache License Version 2.0,
  * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -11,79 +11,50 @@
  * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
  */
 
-buildscript {
-    repositories {
-        maven { url 'https://repo.spring.io/plugins-release' }
-    }
-    dependencies {
-        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
-    }
-}
-
 plugins {
-    id "com.jfrog.bintray" version "1.7.3"
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'propdeps'
-apply plugin: 'propdeps-maven'
-apply plugin: 'propdeps-idea'
-
-wrapper.gradleVersion = '3.4.1'
-
+group = 'com.snowplowanalytics'
 archivesBaseName = 'iab-spiders-and-robots-client'
 version = '0.2.0'
 
-def javaVersion = JavaVersion.VERSION_1_8
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+    withJavadocJar()
+}
 
 repositories {
-    // Use 'maven central' for resolving our dependencies
     mavenCentral()
-    // Use 'jcenter' for resolving testing dependencies
-    jcenter()
-}
-
-configure([compileJava, compileTestJava]) {
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    options.encoding = 'UTF-8'
-}
-
-configurations {
-    provided
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
-    }
 }
 
 dependencies {
-    compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'org.apache.commons:commons-csv:1.4'
-    compile 'commons-io:commons-io:2.5'
-    compile 'com.github.seancfoley:ipaddress:5.3.1'
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    implementation 'org.apache.commons:commons-csv:1.10.0'
+    implementation 'commons-io:commons-io:2.15.1'
+    implementation 'com.github.seancfoley:ipaddress:5.4.0'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.assertj:assertj-core:2.6.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
 }
 
-task sourceJar(type: Jar, dependsOn: 'generateSources') {
-    from sourceSets.main.allJava
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
-task generateSources {
-    project.ext.set("outputDir", "$projectDir/src/main/java/com/snowplowanalytics/iab/spidersandrobotsclient")
+def outputDir = layout.projectDirectory.dir("src/main/java/com/snowplowanalytics/iab/spidersandrobotsclient")
+
+tasks.register('generateSources') {
     doFirst {
-        println outputDir
-        def srcFile = new File((String) outputDir, "Version.java")
+        def srcFile = outputDir.file("Version.java").asFile
         srcFile.parentFile.mkdirs()
         srcFile.write(
                 """/*
- * Copyright (c) 2017-2020 Snowplow Analytics Ltd. All rights reserved.
+ * Copyright (c) 2017-2026 Snowplow Analytics Ltd. All rights reserved.
  *
  * This program is licensed to you under the Apache License Version 2.0,
  * and you may not use this file except in compliance with the Apache License Version 2.0.
@@ -99,119 +70,80 @@ package com.snowplowanalytics.iab.spidersandrobotsclient;
 
 // DO NOT EDIT. AUTO-GENERATED.
 public class Version {
-    static final String CLIENT = "java-$project.version";
-    static final String VERSION = "$project.version";
+    static final String CLIENT = "java-${project.version}";
+    static final String VERSION = "${project.version}";
 }
 """)
     }
 }
 
-compileJava.dependsOn generateSources
-compileJava.source generateSources.outputs.files, sourceSets.main.java
+tasks.named('compileJava') {
+    dependsOn 'generateSources'
+}
 
-
-task printVersion {
+tasks.register('printVersion') {
     doLast {
-        print "$project.version"
+        print project.version
     }
-}
-
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-// add javadoc/source jar tasks as artifacts
-artifacts {
-    archives sourcesJar, javadocJar
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
-        }
-    }
-}
 
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'iab-spiders-and-robots-client'
-        pom.version = "$project.version"
-        pom.project {
-            name = 'iab-spiders-and-robots-client'
-            description = 'Snowplow Java client library for the IAB and ABC International Spiders and Robots lists.'
-            url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/'
-            inceptionYear = '2017'
-
-            packaging = 'jar'
-            groupId = 'com.snowplowanalytics'
-
-            licenses {
-                license {
-                    name = 'The Apache Software License, Version 2.0'
-                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution = 'repo'
-                }
-            }
-            scm {
-                connection = 'https://github.com/snowplow/iab-spiders-and-robots-java-client.git'
+            pom {
+                name = 'iab-spiders-and-robots-client'
+                description = 'Snowplow Java client library for the IAB and ABC International Spiders and Robots lists.'
                 url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
-            }
-            developers {
-                developer {
-                    name = 'Snowplow Analytics Ltd'
-                    email = 'support@snowplowanalytics.com'
-                    organization = 'Snowplow Analytics Ltd'
-                    organizationUrl = 'http://snowplowanalytics.com'
+                inceptionYear = '2017'
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name = 'Snowplow Analytics Ltd'
+                        email = 'support@snowplowanalytics.com'
+                        organization = 'Snowplow Analytics Ltd'
+                        organizationUrl = 'https://snowplow.io'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/snowplow/iab-spiders-and-robots-java-client.git'
+                    developerConnection = 'scm:git:ssh://github.com/snowplow/iab-spiders-and-robots-java-client.git'
+                    url = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
                 }
             }
-            organization {
-                name = 'com.snowplowanalytics'
-                url = 'http://snowplowanalytics.com'
+        }
+    }
+
+    repositories {
+        maven {
+            name = "OSSRH"
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv("SONA_USER") ?: findProperty("SONA_USER") ?: ""
+                password = System.getenv("SONA_PASS") ?: findProperty("SONA_PASS") ?: ""
             }
         }
     }
 }
 
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_SNOWPLOW_MAVEN_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_SNOWPLOW_MAVEN_API_KEY')
+signing {
+    def signingKey = System.getenv("PGP_SECRET")
+    def signingPassword = System.getenv("PGP_PASSPHRASE")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+}
 
-    configurations = ['archives']
-
-    publish = true
-
-    pkg {
-        repo = 'snowplow-maven'
-        name = 'iab-spiders-and-robots-client'
-
-        group = 'com.snowplowanalytics'
-        userOrg = 'snowplow'
-
-        websiteUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
-        vcsUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client'
-        issueTrackerUrl = 'https://github.com/snowplow/iab-spiders-and-robots-java-client/issues'
-
-        licenses = ['Apache-2.0']
-
-        version.name = "$project.version"
-
-        version {
-            mavenCentralSync {
-                sync = true
-                user = project.hasProperty('SONA_USER') ? project.property('SONA_USER') : System.getenv('SONA_USER')
-                password = project.hasProperty('SONA_PASS') ? project.property('SONA_PASS') : System.getenv('SONA_PASS')
-                close = '1'
-            }
-        }
-    }
+tasks.withType(Sign).configureEach {
+    onlyIf { System.getenv("PGP_SECRET") != null }
 }
