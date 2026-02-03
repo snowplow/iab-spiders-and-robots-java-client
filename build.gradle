@@ -90,6 +90,7 @@ tasks.register('printVersion') {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId = 'iab-spiders-and-robots-client'
             from components.java
 
             pom {
