@@ -139,11 +139,11 @@ public class IabClient {
             return IabResponse.customExcludeCheckFailed();
         }
 
-        if (!includeUserAgents.present(userAgent, accurateAt)) {
+        if (!includeUserAgents.presentLowerCase(userAgentLower, accurateAt)) {
             return IabResponse.includeCheckFailed();
         }
 
-        IabResponse excludeResponse = toIabResponse(excludeUserAgents.check(userAgent), accurateAt);
+        IabResponse excludeResponse = toIabResponse(excludeUserAgents.checkLowerCase(userAgentLower), accurateAt);
         return excludeResponse == null ? IabResponse.identifiedAsBrowser() : excludeResponse;
     }
 

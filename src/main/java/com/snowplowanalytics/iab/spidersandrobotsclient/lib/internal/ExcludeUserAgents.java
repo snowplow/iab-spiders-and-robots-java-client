@@ -44,10 +44,12 @@ public class ExcludeUserAgents {
     }
 
     public ExcludeCheckResult check(String userAgent) {
-        String userAgentLowCase = IabFile.toLowerCase(userAgent);
+        return checkLowerCase(IabFile.toLowerCase(userAgent));
+    }
 
+    public ExcludeCheckResult checkLowerCase(String userAgentLowerCase) {
         for (ExcludeRecord record : records) {
-            if (record.isPresent(userAgentLowCase)) {
+            if (record.isPresent(userAgentLowerCase)) {
                 return ExcludeCheckResult.present(
                         record.getInactiveDateAsDate(), record.getPrimaryImpact()
                 );
