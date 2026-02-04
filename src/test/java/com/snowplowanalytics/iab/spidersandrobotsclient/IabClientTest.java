@@ -245,6 +245,22 @@ public class IabClientTest {
     }
 
     @Test
+    public void customIncludeOverridesMatchingExcludePatterns() throws IOException {
+        List<String> includeUseragents = Arrays.asList("AcmeInternalBot");
+        List<String> excludeUseragents = Arrays.asList("bot");
+
+        IabClient client = clientWithCustomLists(
+                EMPTY,
+                "bot|1||1|2|0",
+                EMPTY,
+                excludeUseragents,
+                includeUseragents
+        );
+
+        assertBrowserResponse(client.check("AcmeInternalBot/2.1", localHost));
+    }
+
+    @Test
     public void checkFromFiles() throws IOException {
         IabClient client = new IabClient(
                 TestResources.ipExcludeCurrentFile(),
