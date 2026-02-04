@@ -121,22 +121,22 @@ public class IabClient {
     public IabResponse checkAt(String userAgent, InetAddress ipAddress, Date accurateAt) {
         assertCheckAtArguments(userAgent, ipAddress, accurateAt);
 
-        String userAgentLower = IabFile.toLowerCase(userAgent);
-
-        if (userAgentLower != null && matchesAny(userAgentLower, customIncludeUseragents)) {
-            return IabResponse.identifiedAsBrowser();
-        }
-
-        if (userAgentLower != null && matchesAny(userAgentLower, customExcludeUseragents)) {
-            return IabResponse.customExcludeCheckFailed();
-        }
-
         if (ipAddress != null && ipRanges.belong(ipAddress)) {
             return IabResponse.ipCheckFailed();
         }
 
         if (userAgent == null) {
             return IabResponse.identifiedAsBrowser();
+        }
+
+        String userAgentLower = IabFile.toLowerCase(userAgent);
+
+        if (matchesAny(userAgentLower, customIncludeUseragents)) {
+            return IabResponse.identifiedAsBrowser();
+        }
+
+        if (matchesAny(userAgentLower, customExcludeUseragents)) {
+            return IabResponse.customExcludeCheckFailed();
         }
 
         if (!includeUserAgents.present(userAgent, accurateAt)) {
