@@ -344,9 +344,9 @@ public class IabClientTest {
         assertResponse(
                 response,
                 true,
-                ACTIVE_SPIDER_OR_ROBOT,
+                SPIDER_OR_ROBOT,
                 FAILED_UA_EXCLUDE,
-                PAGE_AND_AD_IMPRESSIONS
+                UNKNOWN
         );
     }
 
