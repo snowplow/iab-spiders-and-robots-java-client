@@ -19,7 +19,7 @@ plugins {
 
 group = 'com.snowplowanalytics'
 archivesBaseName = 'iab-spiders-and-robots-client'
-version = '0.2.0'
+version = '0.2.1-M1'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -90,6 +90,7 @@ tasks.register('printVersion') {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            artifactId = 'iab-spiders-and-robots-client'
             from components.java
 
             pom {
