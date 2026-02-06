@@ -76,6 +76,10 @@ public class IabResponse {
         return createForSpiderOrRobot(category, FAILED_UA_EXCLUDE, primaryImpact);
     }
 
+    static IabResponse customExcludeCheckFailed() {
+        return createForSpiderOrRobot(SPIDER_OR_ROBOT, FAILED_UA_EXCLUDE, UNKNOWN);
+    }
+
     private static IabResponse createForSpiderOrRobot(UserAgentCategory category, CheckReason reason,
                                                       PrimaryImpact primaryImpact) {
         final boolean spiderOrRobot = true;

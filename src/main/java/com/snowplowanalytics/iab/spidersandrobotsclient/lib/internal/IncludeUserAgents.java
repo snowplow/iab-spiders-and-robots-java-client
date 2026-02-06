@@ -50,10 +50,12 @@ public class IncludeUserAgents {
     }
 
     public boolean present(String userAgent, Date accurateAt) {
-        String userAgentLowCase = IabFile.toLowerCase(userAgent);
+        return presentLowerCase(IabFile.toLowerCase(userAgent), accurateAt);
+    }
 
+    public boolean presentLowerCase(String userAgentLowerCase, Date accurateAt) {
         for (IncludeRecord record : records) {
-            boolean present = record.isPresent(userAgentLowCase);
+            boolean present = record.isPresent(userAgentLowerCase);
             if (present && (record.isActive() || record.isBeforeInactiveDate(accurateAt))) {
                 return true;
             }
