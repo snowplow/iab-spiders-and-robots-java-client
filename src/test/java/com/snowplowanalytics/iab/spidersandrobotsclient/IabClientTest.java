@@ -151,10 +151,10 @@ public class IabClientTest {
 
     @Test
     public void customIncludeUseragentsTakesPrecedence() throws IOException {
-        List<String> includeUseragents = Arrays.asList("TrustedBot", "InternalMonitor");
-        List<String> excludeUseragents = Collections.emptyList();
+        List<String> includeUserAgents = Arrays.asList("TrustedBot", "InternalMonitor");
+        List<String> excludeUserAgents = Collections.emptyList();
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUserAgents, includeUserAgents);
 
         assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
         assertBrowserResponse(client.check("My InternalMonitor Agent", localHost));
@@ -162,10 +162,10 @@ public class IabClientTest {
 
     @Test
     public void customExcludeUseragentsClassifiesAsBot() throws IOException {
-        List<String> includeUseragents = Collections.emptyList();
-        List<String> excludeUseragents = Arrays.asList("BadBot", "Scraper");
+        List<String> includeUserAgents = Collections.emptyList();
+        List<String> excludeUserAgents = Arrays.asList("BadBot", "Scraper");
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUserAgents, includeUserAgents);
 
         assertCustomExcludeResponse(client.check("BadBot/1.0", localHost));
         assertCustomExcludeResponse(client.check("My Scraper Agent", localHost));
@@ -173,10 +173,10 @@ public class IabClientTest {
 
     @Test
     public void customIncludeOverridesCustomExclude() throws IOException {
-        List<String> includeUseragents = Arrays.asList("TrustedBot");
-        List<String> excludeUseragents = Arrays.asList("Bot");
+        List<String> includeUserAgents = Arrays.asList("TrustedBot");
+        List<String> excludeUserAgents = Arrays.asList("Bot");
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUserAgents, includeUserAgents);
 
         assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
         assertCustomExcludeResponse(client.check("OtherBot/1.0", localHost));
@@ -184,10 +184,10 @@ public class IabClientTest {
 
     @Test
     public void customListsAreCaseInsensitive() throws IOException {
-        List<String> includeUseragents = Arrays.asList("trustedbot");
-        List<String> excludeUseragents = Arrays.asList("badbot");
+        List<String> includeUserAgents = Arrays.asList("trustedbot");
+        List<String> excludeUserAgents = Arrays.asList("badbot");
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUserAgents, includeUserAgents);
 
         assertBrowserResponse(client.check("TRUSTEDBOT/1.0", localHost));
         assertBrowserResponse(client.check("TrustedBot/1.0", localHost));
@@ -197,10 +197,10 @@ public class IabClientTest {
 
     @Test
     public void customListsUseSubstringMatching() throws IOException {
-        List<String> includeUseragents = Arrays.asList("trusted");
-        List<String> excludeUseragents = Arrays.asList("bad");
+        List<String> includeUserAgents = Arrays.asList("trusted");
+        List<String> excludeUserAgents = Arrays.asList("bad");
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, EMPTY, excludeUserAgents, includeUserAgents);
 
         assertBrowserResponse(client.check("MyTrustedAgent/1.0", localHost));
         assertCustomExcludeResponse(client.check("MyBadAgent/1.0", localHost));
@@ -208,10 +208,10 @@ public class IabClientTest {
 
     @Test
     public void customListsTakePrecedenceOverIabFiles() throws IOException {
-        List<String> includeUseragents = Arrays.asList("robot");
-        List<String> excludeUseragents = Collections.emptyList();
+        List<String> includeUserAgents = Arrays.asList("robot");
+        List<String> excludeUserAgents = Collections.emptyList();
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "Browser|1|0", excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "Browser|1|0", excludeUserAgents, includeUserAgents);
 
         assertBrowserResponse(client.check("robot", localHost));
     }
@@ -228,10 +228,10 @@ public class IabClientTest {
 
     @Test
     public void customExcludeTakesPrecedenceOverIabIncludeFile() throws IOException {
-        List<String> includeUseragents = Collections.emptyList();
-        List<String> excludeUseragents = Arrays.asList("browser");
+        List<String> includeUserAgents = Collections.emptyList();
+        List<String> excludeUserAgents = Arrays.asList("browser");
 
-        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "browser|1|0", excludeUseragents, includeUseragents);
+        IabClient client = clientWithCustomLists(EMPTY, EMPTY, "browser|1|0", excludeUserAgents, includeUserAgents);
 
         assertCustomExcludeResponse(client.check("browser", localHost));
     }
@@ -246,15 +246,15 @@ public class IabClientTest {
 
     @Test
     public void customIncludeOverridesMatchingExcludePatterns() throws IOException {
-        List<String> includeUseragents = Arrays.asList("AcmeInternalBot");
-        List<String> excludeUseragents = Arrays.asList("bot");
+        List<String> includeUserAgents = Arrays.asList("AcmeInternalBot");
+        List<String> excludeUserAgents = Arrays.asList("bot");
 
         IabClient client = clientWithCustomLists(
                 EMPTY,
                 "bot|1||1|2|0",
                 EMPTY,
-                excludeUseragents,
-                includeUseragents
+                excludeUserAgents,
+                includeUserAgents
         );
 
         assertBrowserResponse(client.check("AcmeInternalBot/2.1", localHost));
@@ -377,14 +377,14 @@ public class IabClientTest {
     private static IabClient clientWithCustomLists(String ipFile,
                                                    String excludeUserAgentFile,
                                                    String includeUserAgentFile,
-                                                   List<String> excludeUseragents,
-                                                   List<String> includeUseragents) throws IOException {
+                                                   List<String> excludeUserAgents,
+                                                   List<String> includeUserAgents) throws IOException {
         return new IabClient(
                 asInputStream(ipFilePrefix(ipFile)),
                 asInputStream(dummyRecordPrefix(excludeUserAgentFile)),
                 asInputStream(dummyRecordPrefix(includeUserAgentFile)),
-                excludeUseragents,
-                includeUseragents);
+                excludeUserAgents,
+                includeUserAgents);
     }
 
 }

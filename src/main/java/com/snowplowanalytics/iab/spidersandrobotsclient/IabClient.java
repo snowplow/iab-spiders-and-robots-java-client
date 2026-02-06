@@ -47,9 +47,9 @@ public class IabClient {
 
     private ExcludeUserAgents excludeUserAgents;
 
-    private final List<String> customIncludeUseragents;
+    private final List<String> customIncludeUserAgents;
 
-    private final List<String> customExcludeUseragents;
+    private final List<String> customExcludeUserAgents;
 
     public IabClient(File ipFile,
                      File excludeUserAgentFile,
@@ -61,15 +61,15 @@ public class IabClient {
     public IabClient(File ipFile,
                      File excludeUserAgentFile,
                      File includeUserAgentFile,
-                     List<String> excludeUseragents,
-                     List<String> includeUseragents) throws IOException {
+                     List<String> excludeUserAgents,
+                     List<String> includeUserAgents) throws IOException {
         try (InputStream ip = FileUtils.openInputStream(ipFile);
              InputStream excludeUserAgent = FileUtils.openInputStream(excludeUserAgentFile);
              InputStream includeUserAgent = FileUtils.openInputStream(includeUserAgentFile)) {
             init(ip, excludeUserAgent, includeUserAgent);
         }
-        this.customExcludeUseragents = toLowerCaseList(excludeUseragents);
-        this.customIncludeUseragents = toLowerCaseList(includeUseragents);
+        this.customExcludeUserAgents = toLowerCaseList(excludeUserAgents);
+        this.customIncludeUserAgents = toLowerCaseList(includeUserAgents);
     }
 
     IabClient(InputStream ip,
@@ -82,11 +82,11 @@ public class IabClient {
     IabClient(InputStream ip,
               InputStream excludeUserAgent,
               InputStream includeUserAgent,
-              List<String> excludeUseragents,
-              List<String> includeUseragents) throws IOException {
+              List<String> excludeUserAgents,
+              List<String> includeUserAgents) throws IOException {
         init(ip, excludeUserAgent, includeUserAgent);
-        this.customExcludeUseragents = toLowerCaseList(excludeUseragents);
-        this.customIncludeUseragents = toLowerCaseList(includeUseragents);
+        this.customExcludeUserAgents = toLowerCaseList(excludeUserAgents);
+        this.customIncludeUserAgents = toLowerCaseList(includeUserAgents);
     }
 
     private void init(InputStream ip,
@@ -121,22 +121,22 @@ public class IabClient {
     public IabResponse checkAt(String userAgent, InetAddress ipAddress, Date accurateAt) {
         assertCheckAtArguments(userAgent, ipAddress, accurateAt);
 
+        String userAgentLower = IabFile.toLowerCase(userAgent);
+
+        if (matchesAny(userAgentLower, customIncludeUserAgents)) {
+            return IabResponse.identifiedAsBrowser();
+        }
+
+        if (matchesAny(userAgentLower, customExcludeUserAgents)) {
+            return IabResponse.customExcludeCheckFailed();
+        }
+
         if (ipAddress != null && ipRanges.belong(ipAddress)) {
             return IabResponse.ipCheckFailed();
         }
 
         if (userAgent == null) {
             return IabResponse.identifiedAsBrowser();
-        }
-
-        String userAgentLower = IabFile.toLowerCase(userAgent);
-
-        if (matchesAny(userAgentLower, customIncludeUseragents)) {
-            return IabResponse.identifiedAsBrowser();
-        }
-
-        if (matchesAny(userAgentLower, customExcludeUseragents)) {
-            return IabResponse.customExcludeCheckFailed();
         }
 
         if (!includeUserAgents.presentLowerCase(userAgentLower, accurateAt)) {
