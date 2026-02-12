@@ -27,8 +27,8 @@ jobs:
         env:
           SONA_USER: ${{ secrets.SONA_USER }}
           SONA_PASS: ${{ secrets.SONA_PASS }}
-          PGP_SECRET: ${{ secrets.SONA_PGP_SECRET }}
-          PGP_PASSPHRASE: ${{ secrets.SONA_PGP_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SONA_PGP_SECRET }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SONA_PGP_PASSPHRASE }}
         run: ./gradlew publish
 
       - name: Create GitHub Release

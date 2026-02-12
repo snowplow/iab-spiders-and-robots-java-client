@@ -139,13 +139,12 @@ publishing {
 }
 
 signing {
-    def signingKeyBase64 = System.getenv("PGP_SECRET")
-    def signingKey = signingKeyBase64 != null ? new String(Base64.decoder.decode(signingKeyBase64)) : null
-    def signingPassword = System.getenv("PGP_PASSPHRASE")
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }
 
 tasks.withType(Sign).configureEach {
-    onlyIf { System.getenv("PGP_SECRET") != null }
+    onlyIf { findProperty("signingKey") != null }
 }
