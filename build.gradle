@@ -14,6 +14,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'signing'
 }
 
@@ -124,27 +125,28 @@ publishing {
         }
     }
 
+}
+
+nexusPublishing {
     repositories {
-        maven {
-            name = "OSSRH"
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = System.getenv("SONA_USER") ?: findProperty("SONA_USER") ?: ""
-                password = System.getenv("SONA_PASS") ?: findProperty("SONA_PASS") ?: ""
-            }
+        sonatype {
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
         }
+    }
+    transitionCheckOptions {
+        maxRetries.set(360)
+        delayBetween.set(java.time.Duration.ofSeconds(20))
     }
 }
 
 signing {
-    def signingKey = System.getenv("PGP_SECRET")
-    def signingPassword = System.getenv("PGP_PASSPHRASE")
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }
 
 tasks.withType(Sign).configureEach {
-    onlyIf { System.getenv("PGP_SECRET") != null }
+    onlyIf { findProperty("signingKey") != null }
 }
