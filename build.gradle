@@ -139,7 +139,8 @@ publishing {
 }
 
 signing {
-    def signingKey = System.getenv("PGP_SECRET")
+    def signingKeyBase64 = System.getenv("PGP_SECRET")
+    def signingKey = signingKeyBase64 != null ? new String(Base64.decoder.decode(signingKeyBase64)) : null
     def signingPassword = System.getenv("PGP_PASSPHRASE")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
