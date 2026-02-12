@@ -43,8 +43,8 @@ jobs:
 
       - name: Publish to Maven Central
         env:
-          SONA_USER: ${{ secrets.SONA_USER }}
-          SONA_PASS: ${{ secrets.SONA_PASS }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONA_USER }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONA_PASS }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SONA_PGP_SECRET }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SONA_PGP_PASSPHRASE }}
         run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
