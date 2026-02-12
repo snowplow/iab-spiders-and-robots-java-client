@@ -4,7 +4,7 @@
 [![Release](http://img.shields.io/badge/release-0.2.0-blue.svg?style=flat)][releases]
 [![License](http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat)][license]
 
-This is a Java 8 client library for the **[IAB/ABC International Spiders and Bots List][list]** (available separately).
+This is a Java 21 client library for the **[IAB/ABC International Spiders and Bots List][list]** (available separately).
 
 The library is available from Maven Central, and is published under the Apache 2.0 License.
 
@@ -18,7 +18,7 @@ Add into your project's `pom.xml`:
 <dependency>
     <groupId>com.snowplowanalytics</groupId>
     <artifactId>iab-spiders-and-robots-client</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
@@ -67,7 +67,7 @@ guest$ ./gradlew test
 
 ## Copyright and License
 
-IAB Spiders And Robots Java Client is copyright 2017-2020 Snowplow Analytics Ltd.
+IAB Spiders And Robots Java Client is copyright 2017-2026 Snowplow Analytics Ltd.
 
 Licensed under the **[Apache License, Version 2.0][license]** (the "License"); you may not use this software except in compliance with the License.
 
