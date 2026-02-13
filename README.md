@@ -18,7 +18,7 @@ Add into your project's `pom.xml`:
 <dependency>
     <groupId>com.snowplowanalytics</groupId>
     <artifactId>iab-spiders-and-robots-client</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
