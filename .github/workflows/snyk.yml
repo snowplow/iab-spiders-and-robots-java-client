@@ -18,10 +18,10 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
+    - name: Install Snyk CLI
+      uses: snyk/actions/setup@master
+
     - name: Run Snyk to check for vulnerabilities
-      uses: snyk/actions/gradle@master
-      with:
-        command: monitor
-        args: --project-name=iab-spiders-and-robots-java-client
+      run: snyk monitor --project-name=iab-spiders-and-robots-java-client
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
